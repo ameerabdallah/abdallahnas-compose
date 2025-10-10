@@ -1,0 +1,165 @@
+name: public
+services:
+  # Jellyseerr
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DB_TYPE=postgres
+      - DB_HOST=${PG_HOST}
+      - DB_PORT=${PG_PORT}
+      - DB_USER=${PG_USER}
+      - DB_PASS=${PG_PASS}
+      - DB_NAME=jellyseerr
+    volumes:
+      - ${DOCKER_PATH}/Jellyseerr:/app/config
+    ports:
+      - 5055:5055
+    networks:
+      - public
+      - media_management
+    restart: unless-stopped
+
+  # Komga:
+  komga-comics:
+    image: gotson/komga:latest
+    container_name: komga-comics
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${DOCKER_PATH}/komga/comics:/config
+      - ${DOCKER_PATH}/komga/application.yml:/config/application.yml:ro
+      - ${MEDIA_PATH}/Books/Manga:/media/Manga
+      - ${MEDIA_PATH}/Books/Manhwa:/media/Manhwa
+    ports:
+      - 13308:25600
+    networks:
+      - public
+    restart: unless-stopped
+
+  # Komga:
+  komga-other:
+    image: gotson/komga:latest
+    container_name: komga-other
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${DOCKER_PATH}/komga/other:/config
+      - ${DOCKER_PATH}/komga/application.yml:/config/application.yml:ro
+      - ${MEDIA_PATH}/Books/Other:/Books
+    ports:
+      - 13309:25600
+    networks:
+      - public
+    restart: unless-stopped
+
+  homepage:
+    image: ghcr.io/gethomepage/homepage:main
+    container_name: homepage
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - HOMEPAGE_ALLOWED_HOSTS=*
+    volumes:
+      - ${DOCKER_PATH}/Homepage/config:/app/config
+      - ${DOCKER_PATH}/Homepage/images:/app/public/images
+      - ${MEDIA_PATH}:/mnt/media:ro
+    ports:
+      - 23123:3000
+    networks:
+      - public
+    depends_on:
+      - dockerproxy
+    restart: unless-stopped
+
+  dockerproxy:
+    image: ghcr.io/tecnativa/docker-socket-proxy:latest
+    container_name: dockerproxy
+    environment:
+      - CONTAINERS=1 # Allow access to viewing containers
+      - SERVICES=0 # Allow access to viewing services (necessary when using Docker Swarm)
+      - TASKS=0 # Allow access to viewing tasks (necessary when using Docker Swarm)
+      - POST=0 # Disallow any POST operations (effectively read-only)
+    ports:
+      - 2375:2375
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only
+    networks:
+      - public
+    restart: unless-stopped
+
+  apprise-api:
+    image: lscr.io/linuxserver/apprise-api:latest
+    container_name: apprise-api
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${DOCKER_PATH}/Apprise:/config
+    ports:
+      - 23124:8000
+    networks:
+      - public
+    restart: unless-stopped
+
+  pingvin-share:
+    image: ghcr.io/stonith404/pingvin-share
+    restart: unless-stopped
+    ports:
+      - 23125:3000
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - TRUST_PROXY=true # Set to true if a reverse proxy is in front of the container
+    volumes:
+      - "${FILE_SHARE_PATH}/pigvin:/opt/app/backend/data"
+      - "${DOCKER_PATH}/pigvin-share:/opt/app/frontend/public/img"
+    networks:
+      - public
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    ports:
+      - 3920:80 # Accessible to reverse proxy on host network
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DOMAIN=${VAULTWARDEN_DOMAIN}
+    env_file:
+      - .env.vaultwarden
+    volumes:
+      - ${DOCKER_PATH}/Vaultwarden/data:/data
+    networks:
+      - public
+
+  plantuml:
+    image: plantuml/plantuml-server:jetty
+    container_name: plantuml
+    restart: unless-stopped
+    ports:
+      - 23126:8080
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ${DOCKER_PATH}/PlantUML:/var/plantuml
+    networks:
+      - public
+
+networks:
+  public:
+    driver: bridge
+  media_management:
+    external: true

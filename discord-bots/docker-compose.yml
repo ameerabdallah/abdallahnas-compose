@@ -1,0 +1,28 @@
+name: discord-bots
+services:
+  yourmombot: # Music bot
+    build: 
+      context: .
+    container_name: yourmombot
+    restart: always
+    volumes:
+      - ${DOCKER_PATH}/muse/yourmombot:/data
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    env_file: 
+      - .env
+      - .env.yourmombot
+  yourdadbot: # Music bot
+    build: 
+      context: .
+    container_name: yourdadbot
+    restart: always
+    volumes:
+      - ${DOCKER_PATH}/muse/yourdadbot:/data
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    env_file: 
+      - .env
+      - .env.yourdadbot

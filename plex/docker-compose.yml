@@ -1,0 +1,95 @@
+name: plex
+services:
+  # Plex Media Server
+  plex:
+    image: linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - VERSION=latest
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${PLEX_CONFIG_PATH}/config:/config
+      - ${MEDIA_PATH}:/media:ro
+      - type: tmpfs
+        target: /transcode
+        tmpfs:
+          # 16GiB
+          size: 17179869184
+    devices:
+      - /dev/dri:/dev/dri
+    restart: unless-stopped
+
+  PlexAutoLanguages:
+    image: remirigal/plex-auto-languages:latest
+    container_name: plex-auto-languages
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${DOCKER_PATH}/plex-auto-languages:/config
+    labels:
+      - com.github.willfarrell.autoheal=true
+    depends_on:
+      - plex
+    restart: unless-stopped
+  autoheal:
+    image: willfarrell/autoheal
+    container_name: autoheal
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=com.github.willfarrell.autoheal
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    restart: always
+  kometa:
+    image: lscr.io/linuxserver/kometa:develop
+    container_name: kometa
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    env_file:
+      - .env.kometa
+    volumes:
+      - ${DOCKER_PATH}/kometa:/config
+    depends_on:
+      - plex
+    restart: unless-stopped
+  imagemaid:
+    image: kometateam/imagemaid
+    container_name: imagemaid
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      # Image Maid Settings
+      - PLEX_PATH=/plex-config
+      - SCHEDULE=07:00|weekly(sunday)|mode=move,09:00|monthly(1)|mode=clear,09:00|monthly(15)|mode=clear # at 7:00 every sunday, move and at 9:00 every 1st and 15th of the month, clear
+    volumes:
+      - ${DOCKER_PATH}/imagemaid:/config
+      - ${PLEX_CONFIG_PATH}:/plex-config
+    depends_on:
+      - plex
+    restart: unless-stopped
+
+  # Tautulli - Plex statistics and monitoring
+  tautulli:
+    image: linuxserver/tautulli:latest
+    container_name: tautulli
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${DOCKER_PATH}/tautulli:/config
+      - ${DOCKER_PATH}/tautulli/scripts:/scripts
+      - ${PLEX_CONFIG_PATH}/config/Library/Application Support/Plex Media Server/Logs:/logs:ro
+    ports:
+      - 8181:8181
+    restart: unless-stopped

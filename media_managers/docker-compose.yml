@@ -1,0 +1,168 @@
+name: media_managers
+services:
+  ## ============== START SERVARR CONTAINERS ==============
+  # Flaresolverr
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    networks:
+      - media_management
+    ports:
+      - 8191:8191
+    restart: unless-stopped
+
+  # Prowlarr
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - PROWLARR__POSTGRES__USER=${PG_USER}
+      - PROWLARR__POSTGRES__PASSWORD=${PG_PASS}
+      - PROWLARR__POSTGRES__HOST=${PG_HOST}
+      - PROWLARR__POSTGRES__PORT=${PG_PORT}
+    volumes:
+      - ${DOCKER_PATH}/Prowlarr:/config
+    networks:
+      - downloaders
+      - media_management
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+
+  # Sonarr
+  sonarr:
+    image: linuxserver/sonarr:develop
+    container_name: sonarr
+    ports:
+      - "8989:8989"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - SONARR__POSTGRES__USER=${PG_USER}
+      - SONARR__POSTGRES__PASSWORD=${PG_PASS}
+      - SONARR__POSTGRES__HOST=${PG_HOST}
+      - SONARR__POSTGRES__PORT=${PG_PORT}
+    volumes:
+      - ${MEDIA_PATH}:/media
+      - ${DOCKER_PATH}/Sonarr/config:/config
+      - ${DOCKER_PATH}/Sonarr/scripts:/scripts
+      - ${MEDIA_PATH}/.recycle:/recycle
+    networks:
+      - downloaders
+      - media_management
+    restart: unless-stopped
+
+  # Radarr
+  radarr:
+    image: linuxserver/radarr:develop
+    container_name: radarr
+    ports:
+      - "7878:7878"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - RADARR__POSTGRES__USER=${PG_USER}
+      - RADARR__POSTGRES__PASSWORD=${PG_PASS}
+      - RADARR__POSTGRES__HOST=${PG_HOST}
+      - RADARR__POSTGRES__PORT=${PG_PORT}
+    volumes:
+      - ${MEDIA_PATH}:/media
+      - ${DOCKER_PATH}/Radarr/config:/config
+      - ${DOCKER_PATH}/Radarr/scripts:/scripts
+      - ${MEDIA_PATH}/.recycle:/recycle
+    networks:
+      - downloaders
+      - media_management
+    restart: unless-stopped
+
+  # Lidarr
+  lidarr:
+    image: ghcr.io/hotio/lidarr:pr-plugins
+    container_name: lidarr
+    ports:
+      - "8686:8686"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - LIDARR__POSTGRES__USER=${PG_USER}
+      - LIDARR__POSTGRES__PASSWORD=${PG_PASS}
+      - LIDARR__POSTGRES__HOST=${PG_HOST}
+      - LIDARR__POSTGRES__PORT=${PG_PORT}
+    volumes:
+      - ${MEDIA_PATH}:/media
+      - ${DOCKER_PATH}/Lidarr/config:/config
+      - ${DOCKER_PATH}/Lidarr/scripts:/scripts
+      - ${MEDIA_PATH}/.recycle:/recycle
+    networks:
+      - downloaders
+      - media_management
+    restart: unless-stopped
+
+  # Soularr
+  # soularr:
+  #   image: mrusse08/soularr:latest
+  #   container_name: soularr
+  #   user: ${PUID}:${PGID}
+  #   environment:
+  #     - TZ=${TZ}
+  #     - SCRIPT_INTERVAL=300
+  #   volumes:
+  #     - ${DOCKER_PATH}/Soularr:/data
+  #     - ${MEDIA_PATH}:/media
+  #   networks:
+  #     - downloaders
+  #     - media_management
+  #   restart: unless-stopped
+
+  # Unpackerr
+  unpackerr:
+    image: golift/unpackerr:latest
+    container_name: unpackerr
+    volumes:
+      - ${MEDIA_PATH}/media/temp/lidarr:/media/temp/lidarr
+    user: ${PUID}:${PGID}
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      ## Lidarr Settings
+      - UN_LIDARR_0_URL=http://lidarr:8686
+      - UN_LIDARR_0_API_KEY=${LIDARR_API_KEY}
+      - UN_LIDARR_0_PROTOCOLS=torrent
+      - UN_LIDARR_0_TIMEOUT=10s
+      - UN_LIDARR_0_DELETE_DELAY=5m
+      - UN_LIDARR_0_DELETE_ORIG=true
+    networks:
+      - downloaders
+      - media_management
+
+  # Recyclarr
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    container_name: recyclarr
+    user: ${PUID}:${PGID}
+    environment:
+      - TZ=${TZ}
+      - RECYCLARR_CREATE_CONFIG=true
+    volumes:
+      - ${DOCKER_PATH}/Recyclarr:/config
+    restart: unless-stopped
+
+networks:
+  media_management:
+    external: true
+  downloaders:
+    external: true

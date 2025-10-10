@@ -1,0 +1,57 @@
+name: monitoring
+services:
+  speedtest-tracker:
+    image: lscr.io/linuxserver/speedtest-tracker:latest
+    container_name: speedtest-tracker
+    ports:
+      - "2380:80"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - APP_TIMEZONE=${TZ}
+      - DISPLAY_TIMEZONE=${TZ}
+      - DB_CONNECTION=pgsql
+      - DB_DATABASE=speedtest_tracker
+      - DB_HOST=${PG_HOST}
+      - DB_PORT=${PG_PORT}
+      - DB_USERNAME=${PG_USER}
+      - DB_PASSWORD=${PG_PASS}
+      - APP_KEY=${SPEEDTEST_APP_KEY}
+      - SPEEDTEST_SCHEDULE=27 * * * * # hh:27
+      - SPEEDTEST_SERVERS=39720
+      - ASSET_URL=${SPEEDTEST_ASSET_URL}
+    volumes:
+      - ${DOCKER_PATH}/speedtest-tracker:/config
+    networks:
+      - monitoring
+    restart: unless-stopped
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    ports:
+      - "2381:3001"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${DOCKER_PATH}/uptime-kuma:/app/data
+    networks:
+      - monitoring
+    restart: unless-stopped
+  openspeedtest:
+      image: openspeedtest/latest
+      container_name: openspeedtest
+      environment:
+          - PUID=${PUID}
+          - PGID=${PGID}
+          - TZ=${TZ}
+      ports:
+          - "39793:3000"
+      networks:
+          - monitoring
+      restart: unless-stopped
+
+networks:
+  monitoring:
+    driver: bridge

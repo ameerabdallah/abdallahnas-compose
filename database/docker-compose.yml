@@ -1,0 +1,16 @@
+name: database
+services:
+  postgres-18:
+    container_name: postgres-18
+    image: pgautoupgrade/pgautoupgrade:18-alpine
+    ports:
+      - '${PG_PORT}:5432'
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASS}
+      POSTGRES_DB: abdallahnas
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ${FLASHY_PATH}/database/postgres/18:/var/lib/postgresql
+    # Note: pgautoupgrade image includes a built-in healthcheck
+    restart: unless-stopped

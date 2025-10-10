@@ -1,0 +1,16 @@
+# Environment files - NEVER commit these
+.env
+.env.*
+*/.env
+*/.env.*
+**/.env
+**/.env.*
+
+# Exclude example templates from ignore
+!.env.example
+!.env*.example
+!**/.env.example
+!**/.env*.example
+
+# AI assistant context files
+CLAUDE.md

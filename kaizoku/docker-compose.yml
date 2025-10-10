@@ -1,0 +1,42 @@
+name: kaizoku
+volumes:
+  redis:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DOCKER_PATH}/kaizoku_redis
+
+services:
+  app:
+    container_name: kaizoku
+    image: ghcr.io/oae/kaizoku:latest
+    environment:
+      - DATABASE_URL=postgresql://${PG_USER}:${PG_PASS}@${PG_HOST}:${PG_PORT}/kaizoku
+      - KAIZOKU_PORT=3000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${MEDIA_PATH}/Books/Manga:/Manga
+      - ${DOCKER_PATH}/Kaizoku/config:/config
+      - ${DOCKER_PATH}/Kaizoku/logs:/logs
+    ports:
+      - '54476:3000'
+    networks:
+      - kaizoku
+    restart: unless-stopped
+  redis:
+    container_name: kaizoku-redis
+    image: redis:7-alpine
+    volumes:
+      - redis:/data
+    networks:
+      - kaizoku
+    restart: unless-stopped
+
+networks:
+  kaizoku:
+    driver: bridge

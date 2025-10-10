@@ -1,0 +1,134 @@
+name: game-servers
+services:
+  mc-survival:
+    restart: unless-stopped
+    container_name: mc-survival
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    volumes:
+      - ${GAME_SERVERS_PATH}/mc-survival:/data
+      - ${GAME_SERVERS_PATH}/mc-secrets/forwarding.secret:/secrets/forwarding.secret
+    labels:
+      com.centurylinklabs.watchtower.enable: false
+    env_file:
+      .env.default-mc
+    environment:
+      UID: ${PUID}
+      GID: ${PGID}
+      TZ: ${TZ}
+      MODRINTH_DOWNLOAD_DEPENDENCIES: "required"
+      MODRINTH_PROJECTS: |
+        fabricproxy-lite,lithium,servercore,
+        ferrite-core,scalablelux,
+        simple-voice-chat,
+        raid-restore,
+        dungeons-and-taverns,
+        dungeons-and-taverns-pillager-outpost-overhaul,
+        dungeons-and-taverns-ancient-city-overhaul,
+        dungeons-and-taverns-jungle-temple-overhaul,
+        dungeons-and-taverns-nether-fortress-overhaul,
+        dungeons-and-taverns-desert-temple-overhaul,
+        dungeons-and-taverns-swamp-hut-overhaul,
+        dungeons-and-taverns-stronghold-overhaul,
+        dungeons-and-taverns-end-castle-standalone,
+        villager-names-serilum,
+        no-chat-reports,
+        skinshuffle,
+        styled-chat,styledplayerlist,styled-nicknames,
+        do-a-barrel-roll,
+        fsit,
+        shulkerboxtooltip,
+        double-doors,
+        trimmable-tools,
+        distanthorizons
+      # health-indicator, ^^^
+      MODRINTH_ALLOWED_VERSION_TYPE: "beta"
+      MEMORY: "12G"
+      VERSION: "1.21.8"
+  mc-survival-backup:
+    restart: unless-stopped
+    container_name: mc-survival-backup
+    image: itzg/mc-backup
+    volumes:
+      - ${GAME_SERVERS_PATH}/mc-survival:/data:ro
+      - ${BACKUPS_PATH}/minecraft/mc-survival:/backups
+    labels:
+      com.centurylinklabs.watchtower.enable: false
+    environment:
+      TZ: ${TZ}
+      UID: ${PUID}
+      GID: ${PGID}
+      RCON_HOST: mc-survival
+      BACKUP_INTERVAL: "2h"
+      INITIAL_DELAY: 0
+    depends_on:
+      mc-survival:
+        condition: service_healthy
+  mc-test:
+    restart: unless-stopped
+    container_name: mc-test
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    volumes:
+      - ${GAME_SERVERS_PATH}/mc-test:/data
+      - ${GAME_SERVERS_PATH}/mc-secrets/forwarding.secret:/secrets/forwarding.secret
+    labels:
+      com.centurylinklabs.watchtower.enable: false
+    env_file:
+      .env.default-mc
+    environment:
+      UID: ${PUID}
+      GID: ${PGID}
+      TZ: ${TZ}
+      MODRINTH_DOWNLOAD_DEPENDENCIES: "required"
+      MODRINTH_PROJECTS: |
+        fabricproxy-lite,lithium,servercore,
+        ferrite-core,scalablelux,
+        simple-voice-chat,
+        raid-restore,
+        dungeons-and-taverns,
+        dungeons-and-taverns-pillager-outpost-overhaul,
+        dungeons-and-taverns-ancient-city-overhaul,
+        dungeons-and-taverns-jungle-temple-overhaul,
+        dungeons-and-taverns-nether-fortress-overhaul,
+        dungeons-and-taverns-desert-temple-overhaul,
+        dungeons-and-taverns-swamp-hut-overhaul,
+        dungeons-and-taverns-stronghold-overhaul,
+        dungeons-and-taverns-end-castle-standalone,
+        villager-names-serilum,
+        no-chat-reports,
+        skinshuffle,
+        styled-chat,styledplayerlist,styled-nicknames,
+        do-a-barrel-roll,
+        fsit,
+        shulkerboxtooltip,
+        double-doors,
+        trimmable-tools,
+        distanthorizons
+      MODRINTH_ALLOWED_VERSION_TYPE: "beta"
+      MEMORY: "3G"
+      VERSION: "1.21.8"
+  mc-velocity:
+    restart: unless-stopped
+    image: itzg/mc-proxy
+    container_name: mc-velocity
+    labels:
+      com.centurylinklabs.watchtower.enable: false
+    environment:
+      TZ: ${TZ}
+      TYPE: "VELOCITY"
+      DEBUG: "false"
+      UID: ${PUID}
+      GID: ${PGID}
+      MINECRAFT_VERSION: "1.21.8"
+      MODRINTH_PROJECTS: "simple-voice-chat"
+      MODRINTH_ALLOWED_VERSION_TYPE: "alpha"
+    volumes:
+      - ${GAME_SERVERS_PATH}/mc-velocity/velocity.toml:/config/velocity.toml:ro
+      - ${GAME_SERVERS_PATH}/mc-secrets/forwarding.secret:/config/forwarding.secret:ro
+      - ${GAME_SERVERS_PATH}/mc-velocity/server:/server
+    ports:
+      - "25565:25565"
+      - "25565:25565/udp"
