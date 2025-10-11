@@ -23,7 +23,7 @@
 *.{$TS_DOMAIN} {
 	import error_pages
 	tls {
-		dns cloudflare
+		dns cloudflare {$CF_API_TOKEN}
 	}
 
 	# Block all except Tailscale and local subnets
@@ -139,7 +139,7 @@
 *.{$DOMAIN} {
 	import error_pages
 	tls {
-		dns cloudflare
+		dns cloudflare {$CF_API_TOKEN}
 	}
 
 	@homepage host {$DOMAIN} homepage.{$DOMAIN}
