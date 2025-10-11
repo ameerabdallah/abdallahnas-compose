@@ -36,7 +36,7 @@
 
 *.{$TS_DOMAIN} {
 	import error_pages
-    import cloudflare
+	import cloudflare
 
 	# Block all except Tailscale and local subnets
 	@blocked not remote_ip 100.64.0.0/10 192.168.1.0/24 10.0.0.0/8 172.16.0.0/12
@@ -66,10 +66,10 @@
 	@qbittorrent host qbittorrent.{$TS_DOMAIN} qbt.{$TS_DOMAIN}
 
 	@minipc host minipc.{$TS_DOMAIN}
-    @homeassistant host homeassistant.{$TS_DOMAIN} ha.{$TS_DOMAIN}
+	@homeassistant host homeassistant.{$TS_DOMAIN} ha.{$TS_DOMAIN}
 
 	handle @caddy {
-        reverse_proxy localhost:2019
+		reverse_proxy localhost:2019
 	}
 
 	handle @truenas {
@@ -150,17 +150,17 @@
 		}
 	}
 
-    handle @homeassistant {
-        reverse_proxy {$HOMEASSISTANT_HOST}:8123
-    }
+	handle @homeassistant {
+		reverse_proxy {$HOMEASSISTANT_HOST}:8123
+	}
 
-    import catch_all
+	import catch_all
 }
 
 {$DOMAIN},
 *.{$DOMAIN} {
 	import error_pages
-    import cloudflare
+	import cloudflare
 
 	@homepage host {$DOMAIN} homepage.{$DOMAIN}
 	@komga host komga.{$DOMAIN} comic.{$DOMAIN} manga.{$DOMAIN}
@@ -209,5 +209,5 @@
 		reverse_proxy {$TRUENAS_HOST}:23125
 	}
 
-    import catch_all
+	import catch_all
 }
