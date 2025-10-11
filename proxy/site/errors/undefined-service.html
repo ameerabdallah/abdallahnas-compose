@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Not Configured</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            color: white;
+            max-width: 650px;
+        }
+
+        .icon {
+            font-size: 120px;
+            margin-bottom: 20px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subdomain {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 20px;
+            border-radius: 25px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 20px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .info-box p {
+            margin-bottom: 10px;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: white;
+            color: #fa709a;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 5px;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .links {
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🔍</div>
+        <h1>This Service Doesn't Exist Yet</h1>
+        
+        <div class="subdomain" id="current-subdomain"></div>
+        
+        <p>You found a valid address, but there's nothing here!</p>
+        
+        <div class="info-box">
+            <p><strong>What happened?</strong></p>
+            <p>The server is up and running, but this particular service hasn't been set up yet. Think of it like having a street address with no building on it.</p>
+        </div>
+        
+        <p>If you need this service, reach out to Ameer and he can get it running for you.</p>
+        
+        <div class="links">
+            <a href="javascript:history.back()" class="button">Go Back</a>
+            <a href="/" class="button">Go Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Display the current subdomain
+        const subdomain = window.location.hostname;
+        document.getElementById('current-subdomain').textContent = subdomain;
+    </script>
+</body>
+</html>

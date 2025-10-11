@@ -20,6 +20,15 @@
 	}
 }
 
+(catch_all) {
+	handle {
+		# Catch-all for undefined subdomains
+		root * /usr/share/caddy/errors
+		rewrite * /undefined-service.html
+		file_server
+	}
+}
+
 *.{$TS_DOMAIN} {
 	import error_pages
 	tls {
@@ -131,13 +140,15 @@
 	}
 
 	handle @minipc {
-        reverse_proxy https://{$MINIPC_HOST}:8006 {
+		reverse_proxy https://{$MINIPC_HOST}:8006 {
 			transport http {
 				tls
 				tls_insecure_skip_verify
 			}
 		}
 	}
+
+    import catch_all
 }
 
 {$DOMAIN},
@@ -193,4 +204,6 @@
 	handle @pingvin {
 		reverse_proxy {$TRUENAS_HOST}:23125
 	}
+
+    import catch_all
 }
