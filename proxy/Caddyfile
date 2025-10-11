@@ -151,7 +151,7 @@
 	}
 
 	handle @homeassistant {
-		reverse_proxy {$MINIPC_HOST}:8123
+		reverse_proxy {$HOMEASSISTANT_HOST}:8123
 	}
 
 	import catch_all
