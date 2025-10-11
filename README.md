@@ -15,12 +15,13 @@ This repository contains Docker Compose configurations for a complete home media
 ├── plex/             # Plex Media Server and helpers (Tautulli, Kometa, etc.)
 ├── public/           # Public-facing services (Jellyseerr, Komga, Vaultwarden, etc.)
 ├── kaizoku/          # Manga downloader
-├── monitoring/       # Monitoring tools (speedtest-tracker, uptime-kuma)
+├── monitoring/       # Monitoring tools (speedtest-tracker)
 ├── game-servers/     # Minecraft servers with Velocity proxy
 ├── discord-bots/     # Discord music bots
-├── nginxproxymanager/ # Reverse proxy and SSL certificates
+├── proxy/            # Caddy reverse proxy with custom error pages
 ├── portainer/        # Docker management UI
-└── infrastructure/   # Core services (Watchtower)
+├── infrastructure/   # Core services (Watchtower)
+└── gitlab/           # GitLab (planned - .env.example provided)
 ```
 
 ## Prerequisites
