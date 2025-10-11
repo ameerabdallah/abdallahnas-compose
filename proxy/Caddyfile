@@ -1,0 +1,185 @@
+{
+    admin 0.0.0.0:2019
+    dns cloudflare {$CF_API_TOKEN}
+}
+
+(error_pages) {
+    handle_errors {
+        @404 expression {http.error.status_code} == 404
+        handle @404 {
+            rewrite * /404.html
+            root * /usr/share/caddy/errors
+            file_server
+        }
+        @502 expression {http.error.status_code} == 502
+        handle @502 {
+            rewrite * /502.html
+            root * /usr/share/caddy/errors
+            file_server
+        }
+    }
+}
+
+*.{$TS_DOMAIN} {
+    import error_pages
+
+    # Block all except Tailscale and local subnets
+    @blocked not remote_ip 100.64.0.0/10 192.168.1.0/24 10.0.0.0/8 172.16.0.0/12
+    handle @blocked {
+        abort
+    }
+
+    @caddy host caddy.{$TS_DOMAIN}
+    @truenas host truenas.{$TS_DOMAIN}
+    @apprise host apprise.{$TS_DOMAIN}
+    @dockge host dockge.{$TS_DOMAIN}
+    @gateway host gateway.{$TS_DOMAIN}
+    @mail host mail.{$TS_DOMAIN}
+    @speedtest host speedtest.{$TS_DOMAIN}
+
+    @slskd host slskd.{$TS_DOMAIN}
+    @lidarr host lidarr.{$TS_DOMAIN} lidar.{$TS_DOMAIN}
+    @radarr host radarr.{$TS_DOMAIN} radar.{$TS_DOMAIN}
+    @sonarr host sonarr.{$TS_DOMAIN} sonar.{$TS_DOMAIN}
+    @prowlarr host prowlarr.{$TS_DOMAIN} prowlar.{$TS_DOMAIN}
+    @kaizoku host kaizoku.{$TS_DOMAIN}
+
+    @tautulli host tautulli.{$TS_DOMAIN}
+    @portainer host portainer.{$TS_DOMAIN}
+
+    @sabnzbd host sabnzbd.{$TS_DOMAIN}
+    @qbittorrent host qbittorrent.{$TS_DOMAIN} qbt.{$TS_DOMAIN}
+
+    @minipc host minipc.{$TS_DOMAIN}
+
+    handle @caddy {
+        root * /usr/share/caddy
+        php_fastcgi localhost:2019
+        file_server
+    }
+
+    handle @truenas {
+        reverse_proxy {$TRUENAS_HOST}:80
+    }
+
+    handle @apprise {
+        reverse_proxy {$TRUENAS_HOST}:23124
+    }
+
+    handle @dockge {
+        reverse_proxy {$TRUENAS_HOST}:5001
+    }
+
+    handle @gateway {
+        reverse_proxy https://{$GATEWAY_IP}:443 {
+            transport http {
+                tls
+                tls_insecure_skip_verify
+            }
+        }
+    }
+
+    handle @mail {
+        reverse_proxy https://{mail.***REMOVED***}:2222
+    }
+
+    handle @speedtest {
+        reverse_proxy {$TRUENAS_HOST}:2380
+    }
+
+    handle @slskd {
+        reverse_proxy {$TRUENAS_HOST}:5030
+    }
+
+    handle @lidarr {
+        reverse_proxy {$TRUENAS_HOST}:8686
+    }
+
+    handle @radarr {
+        reverse_proxy {$TRUENAS_HOST}:7878
+    }
+
+    handle @sonarr {
+        reverse_proxy {$TRUENAS_HOST}:8989
+    }
+
+    handle @prowlarr {
+        reverse_proxy {$TRUENAS_HOST}:9696
+    }
+
+    handle @kaizoku {
+        reverse_proxy {$TRUENAS_HOST}:54476
+    }
+
+    handle @tautulli {
+        reverse_proxy {$TRUENAS_HOST}:8181
+    }
+
+    handle @portainer {
+        reverse_proxy {$TRUENAS_HOST}:9000
+    }
+
+    handle @sabnzbd {
+        reverse_proxy {$TRUENAS_HOST}:8080
+    }
+
+    handle @qbittorrent {
+        reverse_proxy {$TRUENAS_HOST}:8081
+    }
+
+    handle @minipc {
+        reverse_proxy {$MINIPC_HOST}:8006
+    }
+}
+
+{$DOMAIN},
+*.{$DOMAIN} {
+    import error_pages
+
+    @homepage host {$DOMAIN} homepage.{$DOMAIN}
+    @komga host komga.{$DOMAIN} comic.{$DOMAIN} manga.{$DOMAIN}
+    @komga-other host komga-other.{$DOMAIN} books.{$DOMAIN} book.{$DOMAIN} novel.{$DOMAIN}
+    @vaultwarden host vw.{$DOMAIN} vaultwarden.{$DOMAIN}
+    @plantuml host plantuml.{$DOMAIN}
+    @jellyseerr host overseerr.{$DOMAIN}
+    @jellyseerr-redirect host jellyseerr.{$DOMAIN} js.{$DOMAIN}
+    @plex host plex.{$DOMAIN} watch.{$DOMAIN}
+    @pingvin host file.{$DOMAIN}
+
+    # Redirect to base jellyseerr domain with 303 see other
+    handle @jellyseerr-redirect {
+        redir https://overseerr.{$DOMAIN}{uri} 303
+    }
+
+    handle @homepage {
+        reverse_proxy {$TRUENAS_HOST}:23123
+    }
+
+    handle @komga {
+        reverse_proxy {$TRUENAS_HOST}:13308
+    }
+
+    handle @komga-other {
+        reverse_proxy {$TRUENAS_HOST}:13309
+    }
+
+    handle @vaultwarden {
+        reverse_proxy {$TRUENAS_HOST}:3920
+    }
+
+    handle @plantuml {
+        reverse_proxy {$TRUENAS_HOST}:23126
+    }
+
+    handle @jellyseerr {
+        reverse_proxy {$TRUENAS_HOST}:5055
+    }
+
+    handle @plex {
+        reverse_proxy {$PLEX_HOST}:32400
+    }
+
+    handle @pingvin {
+        reverse_proxy {$PINGVIN_HOST}:23125
+    }
+}

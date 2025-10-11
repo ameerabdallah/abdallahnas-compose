@@ -25,20 +25,6 @@ services:
     networks:
       - monitoring
     restart: unless-stopped
-  uptime-kuma:
-    image: louislam/uptime-kuma:latest
-    container_name: uptime-kuma
-    ports:
-      - "2381:3001"
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${DOCKER_PATH}/uptime-kuma:/app/data
-    networks:
-      - monitoring
-    restart: unless-stopped
   openspeedtest:
       image: openspeedtest/latest
       container_name: openspeedtest
