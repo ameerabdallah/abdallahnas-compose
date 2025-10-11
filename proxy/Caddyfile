@@ -22,6 +22,9 @@
 
 *.{$TS_DOMAIN} {
 	import error_pages
+	tls {
+		dns cloudflare
+	}
 
 	# Block all except Tailscale and local subnets
 	@blocked not remote_ip 100.64.0.0/10 192.168.1.0/24 10.0.0.0/8 172.16.0.0/12
@@ -135,6 +138,9 @@
 {$DOMAIN},
 *.{$DOMAIN} {
 	import error_pages
+	tls {
+		dns cloudflare
+	}
 
 	@homepage host {$DOMAIN} homepage.{$DOMAIN}
 	@komga host komga.{$DOMAIN} comic.{$DOMAIN} manga.{$DOMAIN}
