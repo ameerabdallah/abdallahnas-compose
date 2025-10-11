@@ -65,9 +65,7 @@
 	@minipc host minipc.{$TS_DOMAIN}
 
 	handle @caddy {
-		root * /usr/share/caddy
-		php_fastcgi localhost:2019
-		file_server
+        reverse_proxy localhost:2019
 	}
 
 	handle @truenas {
