@@ -187,10 +187,10 @@
 	}
 
 	handle @plex {
-		reverse_proxy {$PLEX_HOST}:32400
+		reverse_proxy {$TRUENAS_HOST}:32400
 	}
 
 	handle @pingvin {
-		reverse_proxy {$PINGVIN_HOST}:23125
+		reverse_proxy {$TRUENAS_HOST}:23125
 	}
 }
