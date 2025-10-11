@@ -80,7 +80,7 @@
     }
 
     handle @mail {
-        reverse_proxy https://{mail.***REMOVED***}:2222
+        reverse_proxy https://mail.{$DOMAIN}:2222
     }
 
     handle @speedtest {
