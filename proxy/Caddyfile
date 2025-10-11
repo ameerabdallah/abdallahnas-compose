@@ -132,6 +132,10 @@
 
 	handle @minipc {
 		reverse_proxy {$MINIPC_HOST}:8006
+        transport http {
+            tls
+            tls_insecure_skip_verify
+        }
 	}
 }
 
