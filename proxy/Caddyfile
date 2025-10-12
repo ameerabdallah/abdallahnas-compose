@@ -215,3 +215,13 @@
 
 	import catch_all
 }
+
+{$DEV_DOMAIN},
+*.{$DEV_DOMAIN} {
+	import error_pages
+	import cloudflare
+
+	handle {
+		reverse_proxy {$TRUENAS_HOST}:3000
+	}
+}
