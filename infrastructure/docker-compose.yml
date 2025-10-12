@@ -12,7 +12,7 @@ services:
       # Check for updates at 3 AM daily (same as old Watchtower schedule)
       - WUD_WATCHER_LOCAL_CRON=0 0 3 * * *
       # Docker trigger for automatic updates
-      - WUD_TRIGGER_DOCKER_LOCAL_MODE=auto
+      - WUD_TRIGGER_DOCKER_LOCAL_MODE=simple
     ports:
       - "57062:3000"
     volumes:
