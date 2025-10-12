@@ -8,6 +8,7 @@ services:
     environment:
       PBW_POSTGRES_CONN_STRING: "postgresql://${PG_USER}:${PG_PASS}@postgres-18:5432/abdallahnas?sslmode=disable"
       PBW_ENCRYPTION_KEY: ${PBW_ENCRYPTION_KEY}
+      TZ: ${TZ}
     depends_on:
       postgres-18:
         condition: service_healthy
