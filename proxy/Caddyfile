@@ -218,7 +218,11 @@
 
 {$DEV_DOMAIN} {
 	import cloudflare
-	redir https://www.{$DEV_DOMAIN}{uri} 303
+
+	@root host {$DEV_DOMAIN}
+	handle @root {
+		redir https://www.{$DEV_DOMAIN}{uri} 303
+	}
 }
 
 *.{$DEV_DOMAIN} {
