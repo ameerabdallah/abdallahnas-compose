@@ -1,5 +1,15 @@
 name: database
 services:
+  pgbackweb:
+    container_name: pgbackweb
+    image: eduardolat/pgbackweb:latest
+    ports:
+      - "8085:8085"
+    environment:
+      PBW_POSTGRES_CONN_STRING: "postgresql://${PG_USER}:${PG_PASS}@postgres-18:5432/abdallahnas?sslmode=disable"
+    depends_on:
+      postgres-18:
+        condition: service_healthy
   postgres-18:
     container_name: postgres-18
     image: pgautoupgrade/pgautoupgrade:18-alpine
