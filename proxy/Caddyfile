@@ -216,18 +216,15 @@
 	import catch_all
 }
 
-{$DEV_DOMAIN} {
+{$DEV_DOMAIN},
+*.{$DEV_DOMAIN} {
+	import error_pages
 	import cloudflare
 
 	@root host {$DEV_DOMAIN}
 	handle @root {
 		redir https://www.{$DEV_DOMAIN}{uri} 303
 	}
-}
-
-*.{$DEV_DOMAIN} {
-	import error_pages
-	import cloudflare
 
 	@www host www.{$DEV_DOMAIN}
 	handle @www {
