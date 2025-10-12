@@ -154,6 +154,11 @@
 		reverse_proxy {$TRUENAS_HOST}:8085
 	}
 
+	@wud host wud.{$TS_DOMAIN}
+	handle @wud {
+		reverse_proxy {$TRUENAS_HOST}:57062
+	}
+
 	import catch_all
 }
 

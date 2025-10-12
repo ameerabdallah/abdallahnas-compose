@@ -1,12 +1,21 @@
 name: infrastructure
 services:
-  # Watchtower - Automatic container updates
-  watchtower:
-    container_name: watchtower
-    image: containrrr/watchtower
+  # WUD - What's Up Docker - Container update monitoring and auto-update
+  wud:
+    container_name: wud
+    image: fmartinou/whats-up-docker:latest
     environment:
       - TZ=${TZ}
-      - WATCHTOWER_SCHEDULE=0 0 3 * * *
+      - WUD_LOG_LEVEL=${WUD_LOG_LEVEL:-info}
+      # Watch all containers by default
+      - WUD_WATCHER_LOCAL_WATCHBYDEFAULT=${WUD_WATCHER_LOCAL_WATCHBYDEFAULT:-true}
+      # Check for updates at 3 AM daily (same as old Watchtower schedule)
+      - WUD_WATCHER_LOCAL_CRON=0 0 3 * * *
+      # Docker trigger for automatic updates
+      - WUD_TRIGGER_DOCKER_LOCAL_MODE=auto
+    ports:
+      - "57062:3000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ${DOCKER_PATH}/wud:/store
     restart: unless-stopped
