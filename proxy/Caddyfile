@@ -45,45 +45,26 @@
 	}
 
 	@caddy host caddy.{$TS_DOMAIN}
-	@truenas host truenas.{$TS_DOMAIN}
-	@apprise host apprise.{$TS_DOMAIN}
-	@dockge host dockge.{$TS_DOMAIN}
-	@gateway host gateway.{$TS_DOMAIN}
-	@mail host mail.{$TS_DOMAIN}
-	@speedtest host speedtest.{$TS_DOMAIN}
-
-	@slskd host slskd.{$TS_DOMAIN}
-	@lidarr host lidarr.{$TS_DOMAIN} lidar.{$TS_DOMAIN}
-	@radarr host radarr.{$TS_DOMAIN} radar.{$TS_DOMAIN}
-	@sonarr host sonarr.{$TS_DOMAIN} sonar.{$TS_DOMAIN}
-	@prowlarr host prowlarr.{$TS_DOMAIN} prowlar.{$TS_DOMAIN}
-	@kaizoku host kaizoku.{$TS_DOMAIN}
-
-	@tautulli host tautulli.{$TS_DOMAIN}
-	@portainer host portainer.{$TS_DOMAIN}
-
-	@sabnzbd host sabnzbd.{$TS_DOMAIN}
-	@qbittorrent host qbittorrent.{$TS_DOMAIN} qbt.{$TS_DOMAIN}
-
-	@minipc host minipc.{$TS_DOMAIN}
-	@homeassistant host homeassistant.{$TS_DOMAIN} ha.{$TS_DOMAIN}
-
 	handle @caddy {
 		reverse_proxy localhost:2019
 	}
 
+	@truenas host truenas.{$TS_DOMAIN}
 	handle @truenas {
 		reverse_proxy {$TRUENAS_HOST}:80
 	}
 
+	@apprise host apprise.{$TS_DOMAIN}
 	handle @apprise {
 		reverse_proxy {$TRUENAS_HOST}:23124
 	}
 
+	@dockge host dockge.{$TS_DOMAIN}
 	handle @dockge {
 		reverse_proxy {$TRUENAS_HOST}:5001
 	}
 
+	@gateway host gateway.{$TS_DOMAIN}
 	handle @gateway {
 		reverse_proxy https://{$GATEWAY_IP}:443 {
 			transport http {
@@ -93,54 +74,67 @@
 		}
 	}
 
+	@mail host mail.{$TS_DOMAIN}
 	handle @mail {
 		reverse_proxy https://mail.{$DOMAIN}:2222
 	}
 
+	@speedtest host speedtest.{$TS_DOMAIN}
 	handle @speedtest {
 		reverse_proxy {$TRUENAS_HOST}:2380
 	}
 
+	@slskd host slskd.{$TS_DOMAIN}
 	handle @slskd {
 		reverse_proxy {$TRUENAS_HOST}:5030
 	}
 
+	@lidarr host lidarr.{$TS_DOMAIN} lidar.{$TS_DOMAIN}
 	handle @lidarr {
 		reverse_proxy {$TRUENAS_HOST}:8686
 	}
 
+	@radarr host radarr.{$TS_DOMAIN} radar.{$TS_DOMAIN}
 	handle @radarr {
 		reverse_proxy {$TRUENAS_HOST}:7878
 	}
 
+	@sonarr host sonarr.{$TS_DOMAIN} sonar.{$TS_DOMAIN}
 	handle @sonarr {
 		reverse_proxy {$TRUENAS_HOST}:8989
 	}
 
+	@prowlarr host prowlarr.{$TS_DOMAIN} prowlar.{$TS_DOMAIN}
 	handle @prowlarr {
 		reverse_proxy {$TRUENAS_HOST}:9696
 	}
 
+	@kaizoku host kaizoku.{$TS_DOMAIN}
 	handle @kaizoku {
 		reverse_proxy {$TRUENAS_HOST}:54476
 	}
 
+	@tautulli host tautulli.{$TS_DOMAIN}
 	handle @tautulli {
 		reverse_proxy {$TRUENAS_HOST}:8181
 	}
 
+	@portainer host portainer.{$TS_DOMAIN}
 	handle @portainer {
 		reverse_proxy {$TRUENAS_HOST}:9000
 	}
 
+	@sabnzbd host sabnzbd.{$TS_DOMAIN}
 	handle @sabnzbd {
 		reverse_proxy {$TRUENAS_HOST}:8080
 	}
 
+	@qbittorrent host qbittorrent.{$TS_DOMAIN} qbt.{$TS_DOMAIN}
 	handle @qbittorrent {
 		reverse_proxy {$TRUENAS_HOST}:8081
 	}
 
+	@minipc host minipc.{$TS_DOMAIN}
 	handle @minipc {
 		reverse_proxy https://{$MINIPC_HOST}:8006 {
 			transport http {
@@ -150,6 +144,7 @@
 		}
 	}
 
+	@homeassistant host homeassistant.{$TS_DOMAIN} ha.{$TS_DOMAIN}
 	handle @homeassistant {
 		reverse_proxy {$HOMEASSISTANT_HOST}:8123
 	}
@@ -162,49 +157,48 @@
 	import error_pages
 	import cloudflare
 
-	@homepage host {$DOMAIN} homepage.{$DOMAIN}
-	@komga host komga.{$DOMAIN} comic.{$DOMAIN} manga.{$DOMAIN}
-	@komga-other host komga-other.{$DOMAIN} books.{$DOMAIN} book.{$DOMAIN} novel.{$DOMAIN}
-	@vaultwarden host vw.{$DOMAIN} vaultwarden.{$DOMAIN}
-	@plantuml host plantuml.{$DOMAIN}
-	@jellyseerr host overseerr.{$DOMAIN}
 	@jellyseerr-redirect host jellyseerr.{$DOMAIN} js.{$DOMAIN}
-	@plex host plex.{$DOMAIN} watch.{$DOMAIN}
-	@pingvin host file.{$DOMAIN}
-
 	# Redirect to base jellyseerr domain with 303 see other
 	handle @jellyseerr-redirect {
 		redir https://overseerr.{$DOMAIN}{uri} 303
 	}
 
+	@homepage host {$DOMAIN} homepage.{$DOMAIN}
 	handle @homepage {
 		reverse_proxy {$TRUENAS_HOST}:23123
 	}
 
+	@komga host komga.{$DOMAIN} comic.{$DOMAIN} manga.{$DOMAIN}
 	handle @komga {
 		reverse_proxy {$TRUENAS_HOST}:13308
 	}
 
+	@komga-other host komga-other.{$DOMAIN} books.{$DOMAIN} book.{$DOMAIN} novel.{$DOMAIN}
 	handle @komga-other {
 		reverse_proxy {$TRUENAS_HOST}:13309
 	}
 
+	@vaultwarden host vw.{$DOMAIN} vaultwarden.{$DOMAIN}
 	handle @vaultwarden {
 		reverse_proxy {$TRUENAS_HOST}:3920
 	}
 
+	@plantuml host plantuml.{$DOMAIN}
 	handle @plantuml {
 		reverse_proxy {$TRUENAS_HOST}:23126
 	}
 
+	@jellyseerr host overseerr.{$DOMAIN}
 	handle @jellyseerr {
 		reverse_proxy {$TRUENAS_HOST}:5055
 	}
 
+	@plex host plex.{$DOMAIN} watch.{$DOMAIN}
 	handle @plex {
 		reverse_proxy {$TRUENAS_HOST}:32400
 	}
 
+	@pingvin host file.{$DOMAIN}
 	handle @pingvin {
 		reverse_proxy {$TRUENAS_HOST}:23125
 	}
