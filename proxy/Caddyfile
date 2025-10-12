@@ -149,6 +149,11 @@
 		reverse_proxy {$HOMEASSISTANT_HOST}:8123
 	}
 
+	@pgbackweb host pgbackweb.{$TS_DOMAIN} pgbackup.{$TS_DOMAIN}
+	handle @pgbackweb {
+		reverse_proxy {$TRUENAS_HOST}:8085
+	}
+
 	import catch_all
 }
 
