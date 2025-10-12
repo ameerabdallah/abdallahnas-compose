@@ -216,12 +216,19 @@
 	import catch_all
 }
 
-{$DEV_DOMAIN},
+{$DEV_DOMAIN} {
+	import cloudflare
+	redir https://www.{$DEV_DOMAIN}{uri} permanent
+}
+
 *.{$DEV_DOMAIN} {
 	import error_pages
 	import cloudflare
 
-	handle {
+	@www host www.{$DEV_DOMAIN}
+	handle @www {
 		reverse_proxy {$TRUENAS_HOST}:3000
 	}
+
+	import catch_all
 }
