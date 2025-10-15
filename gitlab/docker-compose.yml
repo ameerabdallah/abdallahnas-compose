@@ -5,9 +5,11 @@ services:
     hostname: 'gitlab.abdallahnas.net'
     environment:
       TZ: ${TZ}
-      GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://gitlab.abdallahnas.net'
-        nginx['enable'] = false
+      # GITLAB_OMNIBUS_CONFIG: |
+      #   external_url 'https://gitlab.abdallahnas.net'
+      #   nginx['enable'] = false
+      #   web_server['external_users'] = ['caddy']
+      #   gitlab_rails['trusted_proxies'] = ['192.168.1.0/24']
     ports:
       - '8029:80' # HTTP port
       - '2424:22'
