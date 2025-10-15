@@ -213,10 +213,10 @@
 		reverse_proxy {$TRUENAS_HOST}:23125
 	}
 
-    @gitlab host gitlab.{$DOMAIN}
-    handle @gitlab {
-        reverse_proxy {$TRUENAS_HOST}:8929
-    }
+	@gitlab host gitlab.{$DOMAIN}
+	handle @gitlab {
+		reverse_proxy {$TRUENAS_HOST}:8929
+	}
 
 	import catch_all
 }
