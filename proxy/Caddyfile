@@ -215,7 +215,7 @@
 
 	@gitlab host gitlab.{$DOMAIN}
 	handle @gitlab {
-		reverse_proxy {$TRUENAS_HOST}:8929
+		reverse_proxy {$TRUENAS_HOST}:8029
 	}
 
 	import catch_all
