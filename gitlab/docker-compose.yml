@@ -6,7 +6,8 @@ services:
     environment:
       TZ: ${TZ}
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://gitlab.abdallahnas.net:443'
+        external_url 'https://gitlab.abdallahnas.net'
+        nginx['enable'] = false
     ports:
       - '8029:80' # HTTP port
       - '2424:22'
