@@ -4,12 +4,7 @@ services:
     container_name: gitlab
     hostname: 'gitlab.abdallahnas.net'
     environment:
-      TZ: ${TZ}
-      # GITLAB_OMNIBUS_CONFIG: |
-      #   external_url 'https://gitlab.abdallahnas.net'
-      #   nginx['enable'] = false
-      #   web_server['external_users'] = ['caddy']
-      #   gitlab_rails['trusted_proxies'] = ['192.168.1.0/24']
+
     ports:
       - '8029:80' # HTTP port
       - '2424:22'
@@ -18,4 +13,4 @@ services:
       - '${DOCKER_PATH}/gitlab/logs:/var/log/gitlab'
       - '${DOCKER_PATH}/gitlab/data:/var/opt/gitlab'
     shm_size: '256m'
-    restart: always
+    restart: unless-stopped
