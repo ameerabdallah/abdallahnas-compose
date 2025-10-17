@@ -14,6 +14,7 @@ mirror_to_github:
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
   script:
     - git remote add github git@github.com:ameerabdallah/abdallahnas-compose.git || true
+    - git branch --show-current
     - git fetch github
     - git push github --all
     - git push github --tags
