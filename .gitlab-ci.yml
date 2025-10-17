@@ -13,7 +13,7 @@ mirror_to_github:
     - chmod 600 ~/.ssh/id_ed25519
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
   script:
-    - ls -la
     - git remote add github git@github.com:ameerabdallah/abdallahnas-compose.git || true
-    - git push github --all --force
-    - git push github --tags --force
+    - git fetch github
+    - git push github --all
+    - git push github --tags
