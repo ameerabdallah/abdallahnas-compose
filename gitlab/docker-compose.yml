@@ -14,3 +14,20 @@ services:
       - '${DOCKER_PATH}/gitlab/data:/var/opt/gitlab'
     shm_size: '256m'
     restart: unless-stopped
+    networks:
+      - gitlab
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    volumes:
+      - '${DOCKER_PATH}/gitlab/runner:/etc/gitlab-runner'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    restart: unless-stopped
+    networks:
+      - gitlab
+
+networks:
+  gitlab:
+    name: gitlab
+    driver: bridge

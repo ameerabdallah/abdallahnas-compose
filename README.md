@@ -21,7 +21,7 @@ This repository contains Docker Compose configurations for a complete home media
 ├── proxy/            # Caddy reverse proxy with custom error pages
 ├── portainer/        # Docker management UI
 ├── infrastructure/   # Core services (Watchtower)
-└── gitlab/           # GitLab (planned - .env.example provided)
+└── gitlab/           # GitLab CE with GitLab Runner
 ```
 
 ## Prerequisites
@@ -55,6 +55,7 @@ This repository contains Docker Compose configurations for a complete home media
 - **Automatic Updates**: Watchtower manages container updates
 - **Media Management**: Complete Servarr stack with quality profiles
 - **Game Servers**: Minecraft with automatic mod updates via Modrinth
+- **GitLab CI/CD**: Self-hosted GitLab with integrated GitLab Runner
 
 ## Environment Variables
 
@@ -75,6 +76,7 @@ See individual service directories for specific requirements.
 - **public**: Isolated network for public-facing services
 - **monitoring**: Isolated network for monitoring tools
 - **kaizoku**: Isolated network for manga downloader
+- **gitlab**: Isolated network for GitLab and GitLab Runner
 
 ## Managing Services
 
