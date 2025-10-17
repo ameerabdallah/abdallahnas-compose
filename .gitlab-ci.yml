@@ -15,6 +15,6 @@ mirror_to_github:
     - git --version
     - which git
   script:
-    - git remote add github git@github.com:YOUR_USERNAME/YOUR_REPO.git || true
+    - git remote add github git@github.com:ameerabdallah/abdallahnas-compose.git || true
     - git push github --all --force
     - git push github --tags --force
