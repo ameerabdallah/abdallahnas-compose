@@ -10,10 +10,6 @@ mirror_to_github:
     - echo "$GITHUB_SSH_KEY" > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
-    - git config --global user.email "ci@gitlab.com"
-    - git config --global user.name "GitLab CI"
-    - git --version
-    - which git
   script:
     - git remote add github git@github.com:ameerabdallah/abdallahnas-compose.git || true
     - git push github --all --force
