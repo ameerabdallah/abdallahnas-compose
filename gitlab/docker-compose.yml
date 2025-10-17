@@ -3,8 +3,6 @@ services:
     image: gitlab/gitlab-ee:latest
     container_name: gitlab
     hostname: 'gitlab.abdallahnas.net'
-    environment:
-
     ports:
       - '8029:80' # HTTP port
       - '2424:22'
