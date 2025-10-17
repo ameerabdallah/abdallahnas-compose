@@ -21,7 +21,7 @@ services:
     volumes:
       - '${DOCKER_PATH}/gitlab/runner:/etc/gitlab-runner'
       - '/var/run/docker.sock:/var/run/docker.sock'
-      - '/root/.docker/config.json:/opt/.docker/config.json:ro'
+      - '/root/.docker/config.json:/root/.docker/config.json:ro'
     restart: unless-stopped
     networks:
       - gitlab
