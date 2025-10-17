@@ -20,7 +20,7 @@ This repository contains Docker Compose configurations for a complete home media
 ├── discord-bots/     # Discord music bots
 ├── proxy/            # Caddy reverse proxy with custom error pages
 ├── portainer/        # Docker management UI
-├── infrastructure/   # Core services (Watchtower)
+├── infrastructure/   # Core services (What's Up Docker)
 └── gitlab/           # GitLab CE with GitLab Runner
 ```
 
