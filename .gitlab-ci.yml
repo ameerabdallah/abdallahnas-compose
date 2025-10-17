@@ -3,7 +3,9 @@ stages:
 
 mirror_to_github:
   stage: mirror
-  image: alpine/git:latest
+  image:
+    name: alpine/git:latest
+    entrypoint: [""]
   before_script:
     - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh
