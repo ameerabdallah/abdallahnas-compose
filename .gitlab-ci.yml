@@ -11,6 +11,6 @@ mirror_to_github:
     - chmod 600 ~/.ssh/id_ed25519
     - ssh-keyscan github.com >> ~/.ssh/known_hosts
   script:
-    - git remote add github git@github.com:YOUR_USERNAME/YOUR_REPO.git || true
+    - git remote add github git@github.com:ameerabdallah/abdallahnas-compose.git || true
     - git push github --all --force
     - git push github --tags --force
