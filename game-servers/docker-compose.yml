@@ -10,7 +10,7 @@ services:
       - ${GAME_SERVERS_PATH}/mc-survival:/data
       - ${GAME_SERVERS_PATH}/mc-secrets/forwarding.secret:/secrets/forwarding.secret
     labels:
-      com.centurylinklabs.watchtower.enable: false
+      wud.watch: false
     env_file:
       .env.default-mc
     environment:
@@ -44,7 +44,7 @@ services:
         distanthorizons
       # health-indicator, ^^^
       MODRINTH_ALLOWED_VERSION_TYPE: "beta"
-      MEMORY: "12G"
+      MEMORY: "8G"
       VERSION: "1.21.8"
   mc-survival-backup:
     restart: unless-stopped
@@ -54,13 +54,13 @@ services:
       - ${GAME_SERVERS_PATH}/mc-survival:/data:ro
       - ${BACKUPS_PATH}/minecraft/mc-survival:/backups
     labels:
-      com.centurylinklabs.watchtower.enable: false
+      wud.watch: false
     environment:
       TZ: ${TZ}
       UID: ${PUID}
       GID: ${PGID}
       RCON_HOST: mc-survival
-      BACKUP_INTERVAL: "2h"
+      BACKUP_INTERVAL: "6h"
       INITIAL_DELAY: 0
     depends_on:
       mc-survival:
@@ -74,8 +74,6 @@ services:
     volumes:
       - ${GAME_SERVERS_PATH}/mc-test:/data
       - ${GAME_SERVERS_PATH}/mc-secrets/forwarding.secret:/secrets/forwarding.secret
-    labels:
-      com.centurylinklabs.watchtower.enable: false
     env_file:
       .env.default-mc
     environment:
